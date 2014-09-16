@@ -1,0 +1,4 @@
+{
+  "DATABASE_URL": "postgres://gatewayd_user:password@localhost:5432/gatewayd_db",
+  "SSL": false
+}
