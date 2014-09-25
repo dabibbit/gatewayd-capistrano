@@ -33,12 +33,13 @@
 #
 # And/or per server (overrides global)
 # ------------------------------------
-server 'ec2-54-197-198-253.compute-1.amazonaws.com',
+
+server ENV['HOST'],
   user: 'deploy',
   roles: %w{web app},
   ssh_options: {
     user: 'deploy',
-    keys: %w(/Users/stevenzeiler/.ssh/amazon_web_services.pem),
+    keys: [ENV['KEYS'] || "#{ENV['HOME']}/.ssh/id_rsa"],
     forward_agent: false,
     auth_methods: %w(publickey)
   }

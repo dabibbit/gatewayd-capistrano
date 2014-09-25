@@ -24,7 +24,10 @@ to which capistrano will deploy
     root@remote chown -R deploy /opt/tmp
 
 ### Deploy
-Set your host 
+Set the deploy host, optionally specifying the SSH key to use for login
 
-    HOST=123.34.35.1 cap staging deploy
+    export HOST=123.34.35.1
+    export KEYS=/home/user/.ssh/amazon_web_services.pem
+
+    cap staging deploy
 
