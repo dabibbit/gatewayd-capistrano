@@ -1,4 +1,4 @@
-# Capistrano Deploy Instructions
+# [Capistrano](http://capistranorb.com/) Deploy Instructions
 
 `gatewayd` can be deployed with capistrano. It has been tested with ubuntu 13.10.
 
