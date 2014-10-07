@@ -35,10 +35,10 @@
 # ------------------------------------
 
 server ENV['HOST'],
-  user: 'deploy',
+  user: 'ubuntu',
   roles: %w{web app},
   ssh_options: {
-    user: 'deploy',
+    user: 'ubuntu',
     keys: [ENV['KEYS'] || "#{ENV['HOME']}/.ssh/id_rsa"],
     forward_agent: false,
     auth_methods: %w(publickey)
