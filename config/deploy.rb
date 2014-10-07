@@ -57,8 +57,7 @@ namespace :gatewayd do
   end
 end
 
-namespace :deploy do
-
+namespace :setup do
   desc "Check that we can access everything"
   task :check_write_permissions do
     on roles(:all) do |host|
@@ -69,7 +68,6 @@ namespace :deploy do
       end
     end
   end
-
   desc "Create deploy directory"
   task :setup_deploy_directory do
     on roles(:app) do
@@ -79,15 +77,21 @@ namespace :deploy do
       sudo :chown, "-R deploy /tmp/gatewayd"
     end
   end
+end
 
-  after :publishing, :restart
-
-  after :restart, :clear_cache do
+namespace :deploy do
+  desc "install new node package dependencies"
+  task :npm_install do
+    on roles(:app) do
+      within release_path do
+        execute :npm, :install
+      end
+    end
+  end
+  after :publishing, :npm_install
+  after :npm_install, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
+      execute :pm2, 'reload all'
     end
   end
 end
