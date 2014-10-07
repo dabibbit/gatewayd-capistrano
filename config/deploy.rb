@@ -5,7 +5,8 @@ set :application, 'gatewayd'
 set :repo_url, 'https://github.com/ripple/gatewayd.git'
 
 # Default branch is :master
-ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
+#ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
+set :branch, ENV['branch'] || 'master'
 
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/opt/gatewayd'
@@ -84,7 +85,7 @@ namespace :deploy do
   task :npm_install do
     on roles(:app) do
       within release_path do
-        execute :npm, :install
+        sudo :npm, :install
       end
     end
   end
