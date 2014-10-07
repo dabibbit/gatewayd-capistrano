@@ -8,7 +8,7 @@ set :repo_url, 'https://github.com/ripple/gatewayd.git'
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/var/www/gatewayd'
+set :deploy_to, '/opt/gatewayd'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -23,7 +23,7 @@ set :deploy_to, '/var/www/gatewayd'
 # set :pty, true
 
 # Default value for :linked_files is []
-# set :linked_files, %w{config/database.yml}
+set :linked_files, %w{config/config.json}
 
 # Default value for linked_dirs is []
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
@@ -71,10 +71,10 @@ namespace :setup do
   desc "Create deploy directory"
   task :setup_deploy_directory do
     on roles(:app) do
-      sudo :mkdir, fetch(:deploy_to)
-      sudo :mkdir, "/tmp/gatewayd"
-      sudo :chown, "-R deploy #{fetch(:deploy_to)}"
-      sudo :chown, "-R deploy /tmp/gatewayd"
+      sudo :mkdir, "-p #{fetch(:deploy_to)}"
+      sudo :mkdir, "-p /tmp/gatewayd"
+      sudo :chown, "-R ubuntu #{fetch(:deploy_to)}"
+      sudo :chown, "-R ubuntu /tmp/gatewayd"
     end
   end
 end
