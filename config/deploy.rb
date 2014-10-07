@@ -8,7 +8,7 @@ set :repo_url, 'https://github.com/ripple/gatewayd.git'
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/opt/gatewayd'
+set :deploy_to, '/var/www/gatewayd'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -34,6 +34,29 @@ set :deploy_to, '/opt/gatewayd'
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+namespace :gatewayd do
+  desc 'Start application'
+  task :start do
+    on roles(:app), in: :sequence, wait: 5 do
+      within release_path do
+        execute 'bin/gateway', 'start'
+      end
+    end
+  end
+  desc 'Reload application'
+  task :reload do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :pm2, 'reload all'
+    end
+  end
+  desc 'Stop application'
+  task :stop do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :pm2, 'kill'
+    end
+  end
+end
+
 namespace :deploy do
 
   desc "Check that we can access everything"
@@ -54,13 +77,6 @@ namespace :deploy do
       sudo :mkdir, "/tmp/gatewayd"
       sudo :chown, "-R deploy #{fetch(:deploy_to)}"
       sudo :chown, "-R deploy /tmp/gatewayd"
-    end
-  end
-
-  desc 'Restart application'
-  task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-      execute :pm2, 'reload all'
     end
   end
 
